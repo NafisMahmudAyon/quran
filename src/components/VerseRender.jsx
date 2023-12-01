@@ -254,7 +254,7 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 			{/* <h2>Rendered Verses with Translation</h2> */}
 			<div className="px-[15px] pb-[50px] ">
 				{isLoading ? (
-					<p>Loading translations...</p>
+					<p>Loading Verses...</p>
 				) : (
 					currentVerses.map((verse, index) => (
 						<Verse
