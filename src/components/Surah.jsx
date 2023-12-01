@@ -1,44 +1,26 @@
-// Surah.js
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import chaptersData from "./ChapterData";
+import ArabicVerseData from "./ArabicVerse";
+import VerseRenderer from "./VerseRender";
 
-function Surah({ surah }) {
-	const [data, setData] = useState(null);
+const Surah = () => {
+	const { surahNumber } = useParams();
+	const [verseData, setVerseData] = useState([]); // State to store fetched verse data
+	const verses_count = chaptersData[2].verses_count;
+	console.log(verses_count)
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`/surah/${surah}.json` // Use string interpolation to include the value of `surah`
-				);
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const result = await response.json();
-				setData(result);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		};
-
-		fetchData();
-	}, [surah]);
 
 	return (
 		<div>
-			{data ? (
-				<ul>
-          {data.name}
-					{data.verses.map((verse, index) => (
-						<li key={index} className="list-none text-right ">
-							{verse.arabic}
-						</li>
-					))}
-				</ul>
-			) : (
-				<p>Loading...</p>
-			)}
+			<h2>Surah Details</h2>
+			{surahNumber}
+			{/* Use the verseData state as needed */}
+			<div>
+				<VerseRenderer surahNumber={surahNumber} versesData={ArabicVerseData} verseCount={verses_count} />
+			</div>
 		</div>
 	);
-}
+};
 
 export default Surah;

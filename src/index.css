@@ -25,6 +25,7 @@
 :root {
   font-family: Poppins;
   color: bisque;
+   background-image: url(../public/bg.png);
   /* line-height: 1.5;
   font-weight: 400;
 
@@ -56,6 +57,37 @@
 }
 ::-webkit-scrollbar {
   display: none;
+}
+
+.settings-panel {
+  position: fixed;
+  bottom: 20px;
+  right: -300px; /* Initially off-screen */
+  width: 280px;
+  background-color: rgb(184, 33, 33);
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease; /* Add transition for smooth animation */
+}
+
+.settings-panel.open {
+  right: 20px; /* Show the panel */
+}
+
+.close-button {
+  margin-top: 10px;
+}
+
+.slider-with-value .rc-slider-handle::before {
+  content: attr(data-value); /* Show the data-value attribute */
+  position: absolute;
+  top: -25px; /* Adjust the vertical position */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: #333;
+  pointer-events: none; /* Ensure the value doesn't interfere with handle dragging */
 }
 
 /* a {

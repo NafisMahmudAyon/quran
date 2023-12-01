@@ -1,0 +1,9 @@
+// FloatingButton.js
+
+// Import your CSS file for styling
+
+const FloatingButton = () => {
+  return ()
+};
+
+export default FloatingButton;
