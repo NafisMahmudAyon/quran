@@ -13,7 +13,6 @@ const Verse = ({
 }) => {
 	const parts = verseKey.split(":");
 	const verseNumber = parts[1]; // Extract the verse number from verseKey
-	console.log(translations)
 	
 
 	return (
@@ -44,7 +43,6 @@ const Verse = ({
 
 const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 	const [translations, setTranslations] = useState([]);
-	console.log(translations)
 	const [font, setFont] = useState(20);
 	const [fontBN, setFontBN] = useState(20);
 	const [isLoading, setIsLoading] = useState(true);

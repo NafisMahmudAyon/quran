@@ -15,7 +15,7 @@ const Surah = () => {
 		<div>
 			<div className="h-[120px] relative flex bg-teal-900  justify-between items-center px-8 border-b border-[bisque] ">
 				<div
-					className="flex flex-col gap-3 justify-center h-6 w-6 items-center leading-none text-xl  rounded-full "
+					className="flex flex-col gap-3 justify-center w-1/4  items-center leading-none text-xl  rounded-full "
 					onClick={() => (window.location.href = `/`)}>
 						<span className="w-6 ">
 
@@ -35,12 +35,10 @@ const Surah = () => {
 					</svg>
 						</span>
 					<span className="text-[10px] whitespace-nowrap ">Back to Home</span>
-					{/* {" "}
-					<span className="   "> {"<"} </span> */}
-					{/* <span>Back</span>{" "} */}
+					
 				</div>
 
-				<div className="flex flex-col items-center ">
+				<div className="flex w-1/2 flex-col items-center ">
 					<span className="text-3xl ">
 						{chaptersData[surahNumber - 1].name_simple}
 					</span>
@@ -52,7 +50,7 @@ const Surah = () => {
 					</span>
 				</div>
 
-				<div className="flex flex-col gap-3 w-[max-content]">
+				<div className="flex w-1/4 flex-col gap-3 ">
 					{surahNumber - 1 !== 0 && (
 						<button
 							onClick={() =>
