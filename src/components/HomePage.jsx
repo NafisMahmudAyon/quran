@@ -5,7 +5,7 @@ import ParaList from "./ParaList";
 const HomePage = () => {
 	const [nav, setNav] = useState("surah");
 	return (
-		<div className="background bg-teal-400 h-[100vh] bg-cover ">
+		<div className="background bg-teal-400 h-[100%] bg-cover ">
 			<div className="h-[120px] border-b ">
 				<h1 className="text-center text-4xl py-4 ">Quran App</h1>
 				<div className="flex justify-between px-12 text-xl pb-2 ">
@@ -25,7 +25,7 @@ const HomePage = () => {
 					</h3>
 				</div>
 			</div>
-			<div className="h-[calc(100vh-120px)] overflow-scroll scroller ">
+			<div className="h-[calc(100%-120px)] overflow-scroll scroller ">
 				{nav === "surah" && (
 					<div className="overflow-hidden ">
 						<SurahList />
