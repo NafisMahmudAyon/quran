@@ -107,7 +107,7 @@ const Surah = () => {
 				</div>
 			</div>
 			{/* Use the verseData state as needed */}
-			<div className="h-[calc(100%-120px)] overflow-scroll bg-teal-900 bg-opacity-80 pt-4 ">
+			<div className="h-[calc(100vh-120px)] overflow-scroll bg-teal-900 bg-opacity-80 pt-4 ">
 				<VerseRenderer
 					surahNumber={surahNumber}
 					versesData={ArabicVerseData}
