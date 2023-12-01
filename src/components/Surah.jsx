@@ -17,25 +17,23 @@ const Surah = () => {
 				<div
 					className="flex flex-col gap-3 justify-center w-1/4  items-center leading-none text-xl  rounded-full "
 					onClick={() => (window.location.href = `/`)}>
-						<span className="w-6 ">
-
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						// ...other attributes
-					>
-						<path
-							stroke="bisque"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="m11 9-3 3m0 0 3 3m-3-3h8m5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-						/>
-					</svg>
-						</span>
+					<span className="w-6 ">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							// ...other attributes
+						>
+							<path
+								stroke="bisque"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="m11 9-3 3m0 0 3 3m-3-3h8m5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+							/>
+						</svg>
+					</span>
 					<span className="text-[10px] whitespace-nowrap ">Back to Home</span>
-					
 				</div>
 
 				<div className="flex w-1/2 flex-col items-center ">
@@ -114,8 +112,9 @@ const Surah = () => {
 					surahNumber={surahNumber}
 					versesData={ArabicVerseData}
 					verseCount={verses_count}
-				/>
+				/><div className="h-1 pb-[50px] w-full "></div>
 			</div>
+			
 		</div>
 	);
 };

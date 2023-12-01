@@ -250,9 +250,9 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 	const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
 	return (
-		<div className=" ">
+		<div className="">
 			{/* <h2>Rendered Verses with Translation</h2> */}
-			<div className="px-[15px] pb-[50px] ">
+			<div className="px-[15px]  ">
 				{isLoading ? (
 					<p>Loading Verses...</p>
 				) : (
@@ -271,7 +271,7 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 					))
 				)}
 			</div>
-			<div className="h-1 pb-[50px] w-full "></div>
+			
 			<div className="absolute bottom-0 w-full">
 				{verseCount > versesPerPage && renderPagination()}
 			</div>
