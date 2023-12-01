@@ -271,6 +271,7 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 					))
 				)}
 			</div>
+			<div className="h-1 pb-[50px] w-full "></div>
 			<div className="absolute bottom-0 w-full">
 				{verseCount > versesPerPage && renderPagination()}
 			</div>
