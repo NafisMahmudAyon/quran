@@ -30,7 +30,7 @@ const SuraList = () => {
 					<div
 						key={surah.id}
 						className="flex justify-between items-center px-6 py-4 border-b "
-						onClick={() => (window.location.href = "/surah/1")}>
+						onClick={() => (window.location.href = `/surah/${surah.id}`)}>
 						<div className="flex gap-4 items-center ">
 							<strong>{surah.id}.</strong>{" "}
 							<div className="flex flex-col ">
