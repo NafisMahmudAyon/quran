@@ -4,8 +4,6 @@ import chaptersData from "./ChapterData";
 import ArabicVerseData from "./ArabicVerse";
 import VerseRenderer from "./VerseRender";
 
-
-
 const Surah = () => {
 	const { surahNumber } = useParams();
 	console.log(surahNumber);
@@ -15,10 +13,12 @@ const Surah = () => {
 
 	return (
 		<div>
-			<div className="h-[120px] relative flex justify-between items-center px-8 border-b border-[bisque] ">
+			<div className="h-[120px] relative flex bg-teal-900  justify-between items-center px-8 border-b border-[bisque] ">
 				<div
-					className="flex justify-center h-6 w-6 items-center leading-none text-xl  rounded-full "
+					className="flex flex-col gap-3 justify-center h-6 w-6 items-center leading-none text-xl  rounded-full "
 					onClick={() => (window.location.href = `/`)}>
+						<span className="w-6 ">
+
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -33,6 +33,8 @@ const Surah = () => {
 							d="m11 9-3 3m0 0 3 3m-3-3h8m5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 						/>
 					</svg>
+						</span>
+					<span className="text-[10px] whitespace-nowrap ">Back to Home</span>
 					{/* {" "}
 					<span className="   "> {"<"} </span> */}
 					{/* <span>Back</span>{" "} */}
@@ -50,30 +52,66 @@ const Surah = () => {
 					</span>
 				</div>
 
-				<div className="flex flex-col ">
-					{surahNumber - 1 !== 0 ? (
+				<div className="flex flex-col gap-3 w-[max-content]">
+					{surahNumber - 1 !== 0 && (
 						<button
 							onClick={() =>
 								(window.location.href = `/surah/${parseInt(surahNumber) - 1}`)
-							}>
-							<span></span>
-							<span>{chaptersData[surahNumber - 2].name_simple}</span>
+							}
+							className="flex items-center gap-2 h-8 w-max whitespace-nowrap">
+							<span className="w-6 ">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									// ...other attributes
+								>
+									<path
+										stroke="bisque"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="m11 9-3 3m0 0 3 3m-3-3h8m5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+									/>
+								</svg>
+							</span>
+							<span className="w-[max-content]">
+								{chaptersData[surahNumber - 2].name_simple}
+							</span>
 						</button>
-					) : null}
+					)}
 
-					{surahNumber + 1 < 115 ? (
+					{surahNumber + 1 < 115 && (
 						<button
 							onClick={() =>
 								(window.location.href = `/surah/${parseInt(surahNumber) + 1}`)
-							}>
-							<span></span>
-							<span>{chaptersData[surahNumber].name_simple}</span>
+							}
+							className="flex flex-row-reverse items-center gap-2 h-8 w-max whitespace-nowrap">
+							<span className="w-6 rotate-180 ">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									// ...other attributes
+								>
+									<path
+										stroke="bisque"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="m11 9-3 3m0 0 3 3m-3-3h8m5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+									/>
+								</svg>
+							</span>
+							<span className="w-[max-content]">
+								{chaptersData[surahNumber].name_simple}
+							</span>
 						</button>
-					) : null}
+					)}
 				</div>
 			</div>
 			{/* Use the verseData state as needed */}
-			<div className="h-[calc(100vh-120px)] overflow-scroll bg-teal-900 bg-opacity-40 pt-4 ">
+			<div className="h-[calc(100vh-120px)] overflow-scroll bg-teal-900 bg-opacity-80 pt-4 ">
 				<VerseRenderer
 					surahNumber={surahNumber}
 					versesData={ArabicVerseData}

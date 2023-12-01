@@ -13,10 +13,13 @@ const Verse = ({
 }) => {
 	const parts = verseKey.split(":");
 	const verseNumber = parts[1]; // Extract the verse number from verseKey
+	console.log(translations)
 	
 
 	return (
-		<div key={verse?.id || index}>
+		<div key={verse?.id || index} className=" border mb-3 p-3 rounded-lg " 
+		// onClick={()=> ()}
+		>
 			<p className=" w-[max-content] px-3 py-1 border">
 				{verseNumber}
 			</p>
@@ -27,7 +30,7 @@ const Verse = ({
 					</p>
 					{translations[index] && (
 						<p style={meaningStyle} className="text-center">
-							{translations[verseNumber]?.translations[0].text}
+							{translations[verseNumber-1]?.translations[0].text}
 						</p>
 					)}
 				</div>
@@ -157,7 +160,7 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 				<li key={i}>
 					<button
 						className={` h-6 w-6 flex justify-center items-center rounded leading-normal ${
-							isActive ? "bg-black" : "bg-teal-500"
+							isActive ? "bg-emerald-300 text-black" : "bg-teal-500"
 						}`}
 						onClick={() => handlePaginationClick(i)}>
 						{i}
@@ -167,13 +170,29 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 		}
 
 		return (
-			<ul className="pagination flex gap-4 justify-center  py-4 bg-teal-900  ">
+			<ul className="pagination flex gap-4 justify-center py-4 bg-teal-900">
 				<li>
-					<button onClick={handlePrevPage}>Prev</button>
+					<button
+						onClick={handlePrevPage}
+						className={`flex justify-center items-center rounded leading-normal bg-teal-500 px-2 ${
+							currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+						}`}
+						disabled={currentPage === 1}>
+						Prev
+					</button>
 				</li>
 				{paginationItems}
 				<li>
-					<button onClick={handleNextPage}>Next</button>
+					<button
+						onClick={handleNextPage}
+						className={`flex justify-center items-center rounded leading-normal bg-teal-500 px-2 ${
+							currentPage === totalPageCount
+								? "opacity-50 cursor-not-allowed"
+								: ""
+						}`}
+						disabled={currentPage === totalPageCount}>
+						Next
+					</button>
 				</li>
 			</ul>
 		);
