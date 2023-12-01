@@ -7,7 +7,7 @@ import VerseRenderer from "./VerseRender";
 const Surah = () => {
 	const { surahNumber } = useParams();
 	const [verseData, setVerseData] = useState([]); // State to store fetched verse data
-	const verses_count = chaptersData[2].verses_count;
+	const verses_count = chaptersData[surahNumber - 1].verses_count;
 	console.log(verses_count)
 
 
