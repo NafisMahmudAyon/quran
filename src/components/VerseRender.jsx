@@ -1,6 +1,29 @@
 import React, { useState, useEffect } from "react";
 import SettingsPanel from "./SettingPanel";
 
+const TruncatedText = ({ text, maxWords }) => {
+	const [isExpanded, setIsExpanded] = useState(false);
+	const words = text.split(" ");
+	const shouldTruncate = words.length > maxWords;
+
+	const toggleExpand = () => {
+		setIsExpanded(!isExpanded);
+	};
+
+	return (
+		<div onClick={toggleExpand}>
+			<p>
+				{shouldTruncate && !isExpanded
+					? `${words.slice(0, maxWords).join(" ")}...`
+					: text}
+				{/* {shouldTruncate && (
+					<button>{isExpanded ? "Show Less" : "Show More"}</button>
+				)} */}
+			</p>
+		</div>
+	);
+};
+
 const Verse = ({
 	verseKey,
 	verse,
@@ -16,8 +39,9 @@ const Verse = ({
 	const surahNumber = parts[0];
 
 	const [tafsir, setTafsir] = useState(false);
+	console.log(tafsir);
 	const [tafsirData, setTafsirData] = useState([]);
-	const [tafsirVerse, setTafsirVerse] = useState("")
+	const [tafsirVerse, setTafsirVerse] = useState("");
 
 	useEffect(() => {
 		const fetchTafsir = async () => {
@@ -42,7 +66,7 @@ const Verse = ({
 			key={verse?.id || index}
 			className="border mb-3 p-3 rounded-lg relative"
 			onClick={() => {
-				setTafsir(!tafsir);
+				setTafsir(true);
 				setTafsirVerse(verseNumber);
 			}}>
 			<p className="w-[max-content] px-3 py-1 border">{verseNumber}</p>
@@ -61,28 +85,31 @@ const Verse = ({
 				<p>Verse not found</p>
 			)}
 			{tafsir && tafsirData.tafsirs.length > 0 && (
-				<div className="fixed background bg-opacity-25 top-0 left-0 right-0 bottom-0 flex flex-col p-4 pt-4 z-10 overflow-scroll">
-					<h2>Tafsir - Verse {tafsirVerse} </h2>
-					<span
-						className="absolute top-4 right-4 text-2xl w-6 h-6 text-red-500 z-20 "
-						onClick={() => setTafsir(!tafsir)}>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="4"
-							stroke-linecap="round"
-							stroke-linejoin="round">
-							<line x1="18" y1="6" x2="6" y2="18"></line>
-							<line x1="6" y1="6" x2="18" y2="18"></line>
-						</svg>
-					</span>
+				<div className="fixed background bg-opacity-25 top-0 left-0 flex flex-col p-4 pt-4 z-10 overflow-scroll">
+					<div className="mb-4 flex justify-between ">
+						<h2>Tafsir - Verse {tafsirVerse}</h2>
+						<span
+							className=" text-2xl w-6 h-6 text-red-500 z-50 cursor-pointer"
+							onClick={() => setTafsir(false)}>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="4"
+								strokeLinecap="round"
+								strokeLinejoin="round">
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+						</span>
+					</div>
+
 					{tafsirData.tafsirs.map((item, index) => (
 						<div
 							key={index}
 							className="border bg-teal-900 bg-opacity-80 p-3 m-1 rounded">
-							<p>{item.text}</p>
+							<TruncatedText text={item.text} maxWords={30} />
 						</div>
 					))}
 				</div>
@@ -90,7 +117,6 @@ const Verse = ({
 		</div>
 	);
 };
-
 
 const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 	const [translations, setTranslations] = useState([]);
@@ -271,8 +297,8 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 					))
 				)}
 			</div>
-			
-			<div className="absolute bottom-0 w-full">
+
+			<div className="fixed bottom-0 w-full">
 				{verseCount > versesPerPage && renderPagination()}
 			</div>
 
