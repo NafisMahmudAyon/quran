@@ -69,7 +69,13 @@ const Verse = ({
 				setTafsir(true);
 				setTafsirVerse(verseNumber);
 			}}>
-			<p className="w-[max-content] px-3 py-1 border">{verseNumber}</p>
+			{surahNumber == 1 && (
+				<p className="w-[max-content] px-3 py-1 border">{index}</p>
+			)}
+			{surahNumber != 1 && (
+				<p className="w-[max-content] px-3 py-1 border">{verseNumber}</p>
+			)}
+
 			{verse ? (
 				<div>
 					<p style={verseStyle} className="text-right">
@@ -118,12 +124,18 @@ const Verse = ({
 	);
 };
 
-const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
+const VerseRenderer = ({
+	surahNumber,
+	versesData,
+	verseCount,
+	bismillah_pre,
+}) => {
 	const [translations, setTranslations] = useState([]);
 	const [font, setFont] = useState(20);
 	const [fontBN, setFontBN] = useState(20);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+	const [paginationEnable, setPaginationEnable] = useState(false);
 
 	const toggleSettings = () => {
 		setIsSettingsOpen(!isSettingsOpen);
@@ -156,6 +168,9 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 		};
 
 		fetchTranslations();
+		if (verseCount > 10) {
+			setPaginationEnable(true);
+		}
 	}, [verseCount, surahNumber]);
 
 	const verseStyle = {
@@ -282,19 +297,56 @@ const VerseRenderer = ({ surahNumber, versesData, verseCount }) => {
 				{isLoading ? (
 					<p>Loading Verses...</p>
 				) : (
-					currentVerses.map((verse, index) => (
-						<Verse
-							key={verse?.id || index}
-							verseKey={`${surahNumber}:${indexOfFirstVerse + index + 1}`}
-							verse={verse}
-							translations={translations}
-							index={index}
-							font={font}
-							fontBN={fontBN}
-							verseStyle={verseStyle}
-							meaningStyle={meaningStyle}
-						/>
-					))
+					<>
+						{currentPage == 1 && (
+							<div className=" flex flex-col justify-center items-center pb-4 ">
+								<h2 className="arabic text-2xl ">
+									{versesData[0].text_indopak}
+								</h2>{" "}
+								<p className="bangla text-xl ">
+									(আরম্ভ করছি) পরম করুণাময় অসীম দয়াময় আল্লাহর নামে।
+								</p>
+							</div>
+						)}
+						{surahNumber != 1 &&
+							currentVerses.map((verse, index) => (
+								<Verse
+									key={verse?.id || index}
+									verseKey={`${surahNumber}:${indexOfFirstVerse + index + 1}`}
+									verse={verse}
+									translations={translations}
+									index={index}
+									font={font}
+									fontBN={fontBN}
+									verseStyle={verseStyle}
+									meaningStyle={meaningStyle}
+									surahNumber={surahNumber}
+								/>
+							))}
+						{surahNumber == 1 &&
+							currentVerses.map((verse, index) => (
+								<>
+									{index != 0 && (
+										<>
+											<Verse
+												key={verse?.id || index}
+												verseKey={`${surahNumber}:${
+													indexOfFirstVerse + index + 1
+												}`}
+												verse={verse}
+												translations={translations}
+												index={index}
+												font={font}
+												fontBN={fontBN}
+												verseStyle={verseStyle}
+												meaningStyle={meaningStyle}
+												surahNumber={surahNumber}
+											/>
+										</>
+									)}
+								</>
+							))}
+					</>
 				)}
 			</div>
 
