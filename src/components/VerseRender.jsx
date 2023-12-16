@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SettingsPanel from "./SettingPanel";
 import chaptersData from "./ChapterData";
+// import AudioPlayer from "./AudioPlayer";
 
 const TruncatedText = ({ text, maxWords }) => {
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -25,6 +26,76 @@ const TruncatedText = ({ text, maxWords }) => {
 	);
 };
 
+const AudioPlayer = ({ audioSrc, isPlaying, onButtonClick }) => {
+	const [error, setError] = useState(null);
+	const audioRef = useRef(null);
+
+	useEffect(() => {
+		const audio = new Audio(audioSrc);
+		audioRef.current = audio;
+
+		const handlePlay = () => {
+			const playPromise = audio.play();
+			if (playPromise !== undefined) {
+				playPromise.catch((error) => {
+					console.error("Play Error:", error);
+					setError(error);
+				});
+			}
+		};
+
+		const handlePause = () => {
+			audio.pause();
+		};
+
+		if (isPlaying) {
+			handlePlay();
+		} else {
+			handlePause();
+		}
+
+		return () => {
+			audio.pause();
+			audio.currentTime = 0;
+		};
+	}, [isPlaying, audioSrc]);
+
+	const togglePlay = () => {
+		setIsPlaying(!isPlaying);
+	};
+
+	return (
+		<div>
+			{error && <p>Error: {error.message}</p>}
+			<button onClick={() => onButtonClick(audioSrc)}>
+				<div className="w-6 h-6 bg-[bisque] rounded-full ">
+					{isPlaying ? (
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="100%"
+							height="100%"
+							viewBox="0 0 100 100"
+							fill="none">
+							<rect x="30" y="25" width="15" height="50" fill="#042f2e" />
+							<rect x="55" y="25" width="15" height="50" fill="#042f2e" />
+						</svg>
+					) : (
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="100%"
+							height="100%"
+							viewBox="0 0 100 100"
+							fill="none">
+							<circle cx="50" cy="50" r="45" fill="bisque" />
+							<polygon points="40,30 40,70 70,50" fill="#042f2e" />
+						</svg>
+					)}
+				</div>
+			</button>
+		</div>
+	);
+};
+
 const Verse = ({
 	verseKey,
 	verse,
@@ -45,6 +116,7 @@ const Verse = ({
 	console.log(tafsir);
 	const [tafsirData, setTafsirData] = useState([]);
 	const [tafsirVerse, setTafsirVerse] = useState("");
+	const [audioFiles, setAudioFiles] = useState([]);
 
 	useEffect(() => {
 		const fetchTafsir = async () => {
@@ -64,36 +136,103 @@ const Verse = ({
 		fetchTafsir();
 	}, [tafsir, surahNumber, verseNumber, verseKey]);
 
+	const [currentAudioSrc, setCurrentAudioSrc] = useState("");
+
+	const handleAudioButtonClick = (audioSrc) => {
+		if (currentAudioSrc !== audioSrc) {
+			setCurrentAudioSrc(audioSrc);
+		} else {
+			setCurrentAudioSrc("");
+		}
+	};
+
+	useEffect(() => {
+		const fetchAudioFiles = async () => {
+			try {
+				const response = await fetch(
+					"https://api.quran.com/api/v4/quran/recitations/1"
+				);
+				if (response.ok) {
+					const data = await response.json();
+					setAudioFiles(data.audio_files);
+				} else {
+					console.error("Failed to fetch audio files");
+				}
+			} catch (error) {
+				console.error("Error fetching audio files:", error);
+			}
+		};
+
+		fetchAudioFiles();
+	}, []);
+
 	return (
 		<div
 			key={verse?.id || index}
 			className="border mb-3 p-3 rounded-lg relative"
-			onClick={() => {
-				setTafsir(true);
-				setTafsirVerse(verseNumber);
-				setFatihaVerse(index);
-			}}>
+			// onClick={() => {
+			// 	setTafsir(true);
+			// 	setTafsirVerse(verseNumber);
+			// 	setFatihaVerse(index);
+			// }}
+		>
 			{surahNumber == 1 && (
-				<p className="w-[max-content] px-3 py-1 border">{index}</p>
+				<div className="flex justify-between">
+					<p className="w-[max-content] px-3 py-1 border">{index}</p>
+					<AudioPlayer
+						audioSrc={`https://verses.quran.com/${
+							audioFiles.find((audio) => audio.verse_key === verseKey)?.url
+						}`}
+						isPlaying={
+							currentAudioSrc ===
+							`https://verses.quran.com/${
+								audioFiles.find((audio) => audio.verse_key === verseKey)?.url
+							}`
+						}
+						onButtonClick={handleAudioButtonClick}
+					/>
+				</div>
 			)}
 			{surahNumber != 1 && (
-				<p className="w-[max-content] px-3 py-1 border">{verseNumber}</p>
+				<div className="flex justify-between">
+					<p className="w-[max-content] px-3 py-1 border">{verseNumber}</p>
+					<AudioPlayer
+						audioSrc={`https://verses.quran.com/${
+							audioFiles.find((audio) => audio.verse_key === verseKey)?.url
+						}`}
+						isPlaying={
+							currentAudioSrc ===
+							`https://verses.quran.com/${
+								audioFiles.find((audio) => audio.verse_key === verseKey)?.url
+							}`
+						}
+						onButtonClick={handleAudioButtonClick}
+					/>
+				</div>
 			)}
 
 			{verse ? (
-				<div>
+				<div
+					onClick={() => {
+						setTafsir(true);
+						setTafsirVerse(verseNumber);
+						setFatihaVerse(index);
+					}}>
 					<p style={verseStyle} className="text-right py-2">
 						{verse.text_indopak}
 					</p>
-					{loading ? "Translation Loading..." : <>
-					
-					{translations[index] && (
-						<p style={meaningStyle} className="text-center">
-							{/* {translations[verseNumber - 1]?.translations[0].text} */}
-							{translations[index]?.translations[0].text}
-						</p>
+					{loading ? (
+						"Translation Loading..."
+					) : (
+						<>
+							{translations[index] && (
+								<p style={meaningStyle} className="text-center">
+									{/* {translations[verseNumber - 1]?.translations[0].text} */}
+									{translations[index]?.translations[0].text}
+								</p>
+							)}
+						</>
 					)}
-					</>}
 				</div>
 			) : (
 				<p>Verse not found</p>
@@ -194,14 +333,14 @@ const VerseRenderer = ({
 	bismillah_pre,
 }) => {
 	const [translations, setTranslations] = useState([]);
-	console.log(translations)
+	console.log(translations);
 	const [font, setFont] = useState(20);
 	const [fontBN, setFontBN] = useState(20);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [paginationEnable, setPaginationEnable] = useState(false);
 	const [loading, setLoading] = useState(false);
-	console.log(loading)
+	console.log(loading);
 
 	const toggleSettings = () => {
 		setIsSettingsOpen(!isSettingsOpen);
@@ -238,9 +377,6 @@ const VerseRenderer = ({
 	// 		setPaginationEnable(true);
 	// 	}
 	// }, [verseCount, surahNumber]);
-
-
-	
 
 	const verseStyle = {
 		fontSize: `${font}px`,
@@ -292,7 +428,6 @@ const VerseRenderer = ({
 		setCurrentPage(pageNumber);
 	};
 
-
 	useEffect(() => {
 		const fetchTranslations = async () => {
 			const translations = [];
@@ -319,7 +454,7 @@ const VerseRenderer = ({
 					);
 				}
 			}
-			setLoading(false)
+			setLoading(false);
 			setTranslations(translations);
 			setIsLoading(false);
 		};
