@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SettingsPanel from "./SettingPanel";
+import chaptersData from "./ChapterData";
 
 const TruncatedText = ({ text, maxWords }) => {
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -38,7 +39,8 @@ const Verse = ({
 	const verseNumber = parts[1];
 	const surahNumber = parts[0];
 
-	const [tafsir, setTafsir] = useState(false);
+	var [fatihaVerse, setFatihaVerse] = useState(1);
+	var [tafsir, setTafsir] = useState(false);
 	console.log(tafsir);
 	const [tafsirData, setTafsirData] = useState([]);
 	const [tafsirVerse, setTafsirVerse] = useState("");
@@ -68,6 +70,7 @@ const Verse = ({
 			onClick={() => {
 				setTafsir(true);
 				setTafsirVerse(verseNumber);
+				setFatihaVerse(index);
 			}}>
 			{surahNumber == 1 && (
 				<p className="w-[max-content] px-3 py-1 border">{index}</p>
@@ -90,34 +93,89 @@ const Verse = ({
 			) : (
 				<p>Verse not found</p>
 			)}
-			{tafsir && tafsirData.tafsirs.length > 0 && (
-				<div className="fixed background bg-opacity-25 top-0 left-0 flex flex-col p-4 pt-4 z-10 overflow-scroll">
-					<div className="mb-4 flex justify-between ">
-						<h2>Tafsir - Verse {tafsirVerse}</h2>
-						<span
-							className=" text-2xl w-6 h-6 text-red-500 z-50 cursor-pointer"
-							onClick={() => setTafsir(false)}>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="4"
-								strokeLinecap="round"
-								strokeLinejoin="round">
-								<line x1="18" y1="6" x2="6" y2="18"></line>
-								<line x1="6" y1="6" x2="18" y2="18"></line>
-							</svg>
-						</span>
+
+			{tafsir == true && tafsirData.tafsirs.length > 0 && (
+				<div className="fixed overflow-y-scroll background bg-opacity-25 top-0 left-0 h-[100dvh] flex flex-col px-4 pb-4 z-10 overflow-scroll">
+					<div className="h-[120px] my-4 px-8 flex justify-between items-center ">
+						{/* {tafsir == true && ( */}
+						<div
+							className=" text-2xl w-6 h-6  text-red-500 z-50 cursor-pointer"
+							onClick={(e) => {
+								e.stopPropagation();
+								setTafsir(false);
+							}}>
+							{/* <svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="4"
+									strokeLinecap="round"
+									strokeLinejoin="round">
+									<line x1="18" y1="6" x2="6" y2="18"></line>
+									<line x1="6" y1="6" x2="18" y2="18"></line>
+								</svg> */}
+							<span className="w-6 ">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									// ...other attributes
+								>
+									<path
+										stroke="bisque"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="m11 9-3 3m0 0 3 3m-3-3h8m5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+									/>
+								</svg>
+							</span>
+						</div>
+						{/* )} */}
+						<div className="flex justify-center items-center ">
+							{surahNumber == 1 && (
+								<div className=" flex items-center justify-center flex-col  ">
+									<h2 className="text-2xl ">Tafsir</h2>
+									<span>
+										{" "}
+										<span className="underline">
+											"{chaptersData[surahNumber - 1].name_simple}"
+										</span>{" "}
+										- Verse {fatihaVerse}
+									</span>
+								</div>
+							)}
+							{surahNumber != 1 && (
+								<div className=" flex items-center justify-center flex-col  ">
+									<h2 className="text-2xl ">Tafsir</h2>
+									<span>
+										{" "}
+										<span className="underline">
+											{chaptersData[surahNumber - 1].name_simple}
+										</span>{" "}
+										- Verse {tafsirVerse}
+									</span>
+								</div>
+								// <div className="mb-4 flex justify-between ">
+								// 	<h2>Tafsir - Verse {tafsirVerse}</h2>
+								// </div>
+							)}
+						</div>
+						<div></div>
 					</div>
 
-					{tafsirData.tafsirs.map((item, index) => (
-						<div
-							key={index}
-							className="border bg-teal-900 bg-opacity-80 p-3 m-1 rounded">
-							<TruncatedText text={item.text} maxWords={30} />
-						</div>
-					))}
+					{tafsirData.tafsirs
+						.filter((item) => item.text.length > 10)
+						.map((item, index) => (
+							<div
+								key={index}
+								className="border bg-teal-900 bg-opacity-80 p-3 m-1 rounded">
+								<TruncatedText text={item.text} maxWords={30} />
+
+								{/* <TruncatedText text={item.text} maxWords={30} /> */}
+							</div>
+						))}
 				</div>
 			)}
 		</div>

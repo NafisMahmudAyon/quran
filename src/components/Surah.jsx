@@ -20,7 +20,8 @@ const Surah = () => {
 			<div className="h-[120px] relative bg-teal-900 px-8 border-b border-[bisque] ">
 				<div className="flex justify-between items-center border-b pt-2 ">
 					<div
-						className="flex flex-col gap-3 justify-center w-1/4  items-center leading-none text-xl  rounded-full "
+						className="flex flex-col gap-3 justify-center w-1/4  items-center leading-none text-xl cursor-pointer  rounded-full "
+						title="Back"
 						onClick={() => (window.location.href = `/`)}>
 						<span className="w-6 ">
 							<svg
@@ -48,8 +49,13 @@ const Surah = () => {
 							{chaptersData[surahNumber - 1].name_arabic}
 						</span>
 					</div>
-					<div className="text-sm ">
-						{chaptersData[surahNumber - 1].revelation_place}
+					<div className="text-sm flex flex-col items-center ">
+						<span className="text-[16px] whitespace-no-wrap">
+							{chaptersData[surahNumber - 1].revelation_place}
+						</span>
+						<span className="text-[10px]  whitespace-no-wrap">
+							(Revelation Place)
+						</span>
 					</div>
 				</div>
 
