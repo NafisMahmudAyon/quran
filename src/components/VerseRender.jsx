@@ -34,6 +34,7 @@ const Verse = ({
 	fontBN,
 	verseStyle,
 	meaningStyle,
+	loading,
 }) => {
 	const parts = verseKey.split(":");
 	const verseNumber = parts[1];
@@ -81,14 +82,18 @@ const Verse = ({
 
 			{verse ? (
 				<div>
-					<p style={verseStyle} className="text-right">
+					<p style={verseStyle} className="text-right py-2">
 						{verse.text_indopak}
 					</p>
+					{loading ? "Translation Loading..." : <>
+					
 					{translations[index] && (
 						<p style={meaningStyle} className="text-center">
-							{translations[verseNumber - 1]?.translations[0].text}
+							{/* {translations[verseNumber - 1]?.translations[0].text} */}
+							{translations[index]?.translations[0].text}
 						</p>
 					)}
+					</>}
 				</div>
 			) : (
 				<p>Verse not found</p>
@@ -189,47 +194,53 @@ const VerseRenderer = ({
 	bismillah_pre,
 }) => {
 	const [translations, setTranslations] = useState([]);
+	console.log(translations)
 	const [font, setFont] = useState(20);
 	const [fontBN, setFontBN] = useState(20);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [paginationEnable, setPaginationEnable] = useState(false);
+	const [loading, setLoading] = useState(false);
+	console.log(loading)
 
 	const toggleSettings = () => {
 		setIsSettingsOpen(!isSettingsOpen);
 	};
 
-	useEffect(() => {
-		const fetchTranslations = async () => {
-			const translations = [];
-			for (let i = 1; i <= verseCount; i++) {
-				const verseKey = `${surahNumber}:${i}`;
-				const apiUrl = `https://api.quran.com/api/v4/quran/translations/161?verse_key=${verseKey}`;
+	// useEffect(() => {
+	// 	const fetchTranslations = async () => {
+	// 		const translations = [];
+	// 		for (let i = 1; i <= verseCount; i++) {
+	// 			const verseKey = `${surahNumber}:${i}`;
+	// 			const apiUrl = `https://api.quran.com/api/v4/quran/translations/161?verse_key=${verseKey}`;
 
-				try {
-					const response = await fetch(apiUrl);
-					if (response.ok) {
-						const translationData = await response.json();
-						translations.push(translationData);
-					} else {
-						console.error(`Failed to fetch translation for verse ${verseKey}`);
-					}
-				} catch (error) {
-					console.error(
-						`Error fetching translation for verse ${verseKey}:`,
-						error
-					);
-				}
-			}
-			setTranslations(translations);
-			setIsLoading(false);
-		};
+	// 			try {
+	// 				const response = await fetch(apiUrl);
+	// 				if (response.ok) {
+	// 					const translationData = await response.json();
+	// 					translations.push(translationData);
+	// 				} else {
+	// 					console.error(`Failed to fetch translation for verse ${verseKey}`);
+	// 				}
+	// 			} catch (error) {
+	// 				console.error(
+	// 					`Error fetching translation for verse ${verseKey}:`,
+	// 					error
+	// 				);
+	// 			}
+	// 		}
+	// 		setTranslations(translations);
+	// 		setIsLoading(false);
+	// 	};
 
-		fetchTranslations();
-		if (verseCount > 10) {
-			setPaginationEnable(true);
-		}
-	}, [verseCount, surahNumber]);
+	// 	fetchTranslations();
+	// 	if (verseCount > 10) {
+	// 		setPaginationEnable(true);
+	// 	}
+	// }, [verseCount, surahNumber]);
+
+
+	
 
 	const verseStyle = {
 		fontSize: `${font}px`,
@@ -280,6 +291,44 @@ const VerseRenderer = ({
 	const handlePaginationClick = (pageNumber) => {
 		setCurrentPage(pageNumber);
 	};
+
+
+	useEffect(() => {
+		const fetchTranslations = async () => {
+			const translations = [];
+			const startVerse = (currentPage - 1) * versesPerPage + 1;
+			const endVerse = Math.min(currentPage * versesPerPage, verseCount);
+			setLoading(true);
+
+			for (let i = startVerse; i <= endVerse; i++) {
+				const verseKey = `${surahNumber}:${i}`;
+				const apiUrl = `https://api.quran.com/api/v4/quran/translations/161?verse_key=${verseKey}`;
+
+				try {
+					const response = await fetch(apiUrl);
+					if (response.ok) {
+						const translationData = await response.json();
+						translations.push(translationData);
+					} else {
+						console.error(`Failed to fetch translation for verse ${verseKey}`);
+					}
+				} catch (error) {
+					console.error(
+						`Error fetching translation for verse ${verseKey}:`,
+						error
+					);
+				}
+			}
+			setLoading(false)
+			setTranslations(translations);
+			setIsLoading(false);
+		};
+
+		fetchTranslations();
+		if (verseCount > 10) {
+			setPaginationEnable(true);
+		}
+	}, [verseCount, surahNumber, currentPage, versesPerPage]);
 
 	const renderPagination = () => {
 		const adjacentPages = 2; // Number of adjacent pages to show
@@ -379,6 +428,7 @@ const VerseRenderer = ({
 									verseStyle={verseStyle}
 									meaningStyle={meaningStyle}
 									surahNumber={surahNumber}
+									loading={loading}
 								/>
 							))}
 						{surahNumber == 1 &&
@@ -399,6 +449,7 @@ const VerseRenderer = ({
 												verseStyle={verseStyle}
 												meaningStyle={meaningStyle}
 												surahNumber={surahNumber}
+												loading={loading}
 											/>
 										</>
 									)}
