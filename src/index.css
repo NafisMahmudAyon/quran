@@ -60,6 +60,18 @@
   display: none;
 }
 
+.range{
+  -webkit-appearance: none;
+}
+.range::-webkit-slider-thumb{
+  appearance: none;
+  background-color: rgb(20,184,166);
+  width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
 .settings-panel {
   position: fixed;
   bottom: 20px;

@@ -131,7 +131,7 @@ const Surah = () => {
 					verseCount={verses_count}
 					bismillah_pre={bismillah_pre}
 				/>
-				<div className="h-1 pb-[50px] w-full "></div>
+				<div className="h-1 pb-[120px] w-full "></div>
 			</div>
 		</div>
 	);

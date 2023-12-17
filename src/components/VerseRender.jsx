@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import SettingsPanel from "./SettingPanel";
 import chaptersData from "./ChapterData";
-// import AudioPlayer from "./AudioPlayer";
+import SimpleAudioPlayer from "./SimpleAudioPlayer";
+import Player from "./Player";
 
 const TruncatedText = ({ text, maxWords }) => {
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -96,6 +97,8 @@ const AudioPlayer = ({ audioSrc, isPlaying, onButtonClick }) => {
 	);
 };
 
+// https://api.quran.com/api/v4/chapter_recitations/1?language=en
+
 const Verse = ({
 	verseKey,
 	verse,
@@ -117,6 +120,7 @@ const Verse = ({
 	const [tafsirData, setTafsirData] = useState([]);
 	const [tafsirVerse, setTafsirVerse] = useState("");
 	const [audioFiles, setAudioFiles] = useState([]);
+	console.log(audioFiles)
 
 	useEffect(() => {
 		const fetchTafsir = async () => {
@@ -340,7 +344,8 @@ const VerseRenderer = ({
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 	const [paginationEnable, setPaginationEnable] = useState(false);
 	const [loading, setLoading] = useState(false);
-	console.log(loading);
+
+	const [versePlaylist, setVersePlaylist] = useState([]);
 
 	const toggleSettings = () => {
 		setIsSettingsOpen(!isSettingsOpen);
@@ -404,11 +409,14 @@ const VerseRenderer = ({
 	const versesPerPage = 10;
 
 	const indexOfLastVerse = currentPage * versesPerPage;
+	console.log(indexOfLastVerse)
 	const indexOfFirstVerse = indexOfLastVerse - versesPerPage;
+	console.log(indexOfFirstVerse)
 	const currentVerses = allFoundVerses.slice(
 		indexOfFirstVerse,
 		indexOfLastVerse
 	);
+	console.log(currentVerses)
 
 	const totalPageCount = Math.ceil(verseCount / versesPerPage);
 
@@ -594,8 +602,12 @@ const VerseRenderer = ({
 				)}
 			</div>
 
-			<div className="fixed bottom-0 w-full">
-				{verseCount > versesPerPage && renderPagination()}
+			<div className="fixed bottom-0 w-full bg-teal-900">
+				<div id="audio-section">
+					<Player start={indexOfFirstVerse + 1} end={indexOfLastVerse} surahNumber={surahNumber} />
+				</div>
+				<div>{verseCount > versesPerPage && renderPagination()}</div>
+				{/* audio play section  */}
 			</div>
 
 			<button

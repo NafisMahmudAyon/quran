@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const AudioPlayer = ({ audioSrc }) => {
 	const [audio] = useState(new Audio());
 	const [isPlaying, setIsPlaying] = useState(false);
+	const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
 
 	useEffect(() => {
 		audio.src = `https://verses.quran.com/${audioSrc}`;
